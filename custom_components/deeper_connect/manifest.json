@@ -1,0 +1,11 @@
+{
+  "domain": "deeper_connect",
+  "name": "Deeper Connect",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://github.com/deeper-network",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "version": "0.1.2"
+}

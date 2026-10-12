@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.idea/
+
+# Environment variables
+.env
+
+# Home Assistant
+/.storage/
+/home-assistant.log*
+/home-assistant_v2.db*
+/.HA_VERSION
+/.ha_run.lock
+/.cloud/
+/deps/
+# Config - ignore everything except custom_components
+/config/*
+!/config/custom_components/
+
+# Git
+.git/
+
+# OS
+.DS_Store
+Thumbs.db
+
+/testing/.env

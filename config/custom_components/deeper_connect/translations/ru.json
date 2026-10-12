@@ -1,0 +1,165 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Deeper Connect",
+        "description": "Введите адрес API, логин и обычный пароль AtomOS.",
+        "data": {
+          "base_url": "Адрес API",
+          "username": "Логин",
+          "password": "Пароль"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Deeper Connect",
+        "description": "Введите адрес API, логин и обычный пароль AtomOS.",
+        "data": {
+          "base_url": "Адрес API",
+          "username": "Логин",
+          "password": "Пароль"
+        }
+      },
+      "reconfigure": {
+        "title": "Deeper Connect",
+        "description": "Введите адрес API, логин и обычный пароль AtomOS.",
+        "data": {
+          "base_url": "Адрес API",
+          "username": "Логин",
+          "password": "Пароль"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Не удалось подключиться или формат API несовместим.",
+      "invalid_auth": "Deeper отклонил вход. Проверьте логин и пароль.",
+      "invalid_url": "Укажите http(s) адрес API, при необходимости с /api.",
+      "wrong_device": "По этому адресу находится другое устройство.",
+      "already_configured": "Устройство уже настроено.",
+      "invalid_password": "Пароль пустой или слишком длинный для RSA-шифрования."
+    },
+    "abort": {
+      "already_configured": "Устройство уже настроено.",
+      "reauth_successful": "Учётные данные обновлены.",
+      "reconfigure_successful": "Настройки обновлены."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Настройки Deeper Connect",
+        "description": "Выберите настройку интеграции или добавьте сервис с маршрутом.",
+        "menu_options": {
+          "settings": "Опрос и автоматическое восстановление",
+          "application": "Выбрать приложение",
+          "custom_service": "Добавить свой сервис"
+        }
+      },
+      "settings": {
+        "title": "Настройки Deeper Connect",
+        "description": "По умолчанию обновление туннелей запускается только вручную. При желании включите автоматическое восстановление и укажите интервал в минутах. Опрос датчиков только читает состояние.",
+        "data": {
+          "scan_interval": "Интервал опроса (секунды)",
+          "auto_refresh": "Автоматически обновлять туннели и восстанавливать маршруты",
+          "refresh_interval_minutes": "Интервал автовосстановления (минуты)"
+        }
+      },
+      "application": {
+        "title": "Выбрать приложение",
+        "description": "Выберите приложение из каталога Deeper и маршрут. Сохранение применит настройку на устройстве и добавит список маршрутов на его страницу.",
+        "data": {
+          "application": "Приложение",
+          "tunnel": "Маршрут"
+        }
+      },
+      "custom_service": {
+        "title": "Добавить свой сервис",
+        "description": "Укажите название, домены сервиса (по одному в строке) и маршрут. Сохранение добавит или изменит доменные правила Deeper. Достаточно доменов, без http://, путей и *. Для собственного сервиса доступны прямое подключение и конкретный туннель.",
+        "data": {
+          "name": "Название сервиса",
+          "domains": "Домены",
+          "tunnel": "Маршрут"
+        }
+      }
+    },
+    "error": {
+      "application_missing": "Приложение больше не найдено в каталоге Deeper.",
+      "operation_failed": "Не удалось применить маршрут. Проверьте доступность туннеля и устройства. Часть доменных правил могла быть применена; можно повторить сохранение.",
+      "invalid_domains": "Введите от 1 до 50 корректных доменов, без URL, IP-адресов или *. ",
+      "invalid_name": "Введите название длиной от 1 до 60 символов.",
+      "name_exists": "Сервис с таким названием уже добавлен.",
+      "domain_in_use": "Один из доменов уже используется другим собственным сервисом."
+    },
+    "abort": {
+      "cannot_connect": "Интеграция не загружена или устройство недоступно. Сначала восстановите подключение."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "count_tunnels": {
+        "name": "Активные туннели"
+      },
+      "count_domains": {
+        "name": "Количество доменов в белом списке"
+      },
+      "installed_version": {
+        "name": "Версия AtomOS"
+      },
+      "latest_version": {
+        "name": "Последняя версия AtomOS"
+      },
+      "temperature": {
+        "name": "Температура"
+      },
+      "cpu_cores": {
+        "name": "Количество ядер процессора"
+      },
+      "cpu_model": {
+        "name": "Модель процессора"
+      },
+      "total_memory": {
+        "name": "Общий объём памяти"
+      }
+    },
+    "button": {
+      "refresh_all": {
+        "name": "Обновить и восстановить туннели"
+      },
+      "reboot": {
+        "name": "Перезагрузить устройство"
+      }
+    },
+    "update": {
+      "firmware": {
+        "name": "Прошивка AtomOS"
+      }
+    },
+    "select": {
+      "routing_mode": {
+        "name": "Режим маршрутизации"
+      },
+      "app_instagram_route": {
+        "name": "Маршрут Instagram"
+      },
+      "app_youtube_route": {
+        "name": "Маршрут YouTube"
+      },
+      "app_whatsapp_route": {
+        "name": "Маршрут WhatsApp"
+      },
+      "app_telegram_route": {
+        "name": "Маршрут Telegram"
+      },
+      "app_route": {
+        "name": "Маршрут {app}"
+      },
+      "custom_service_route": {
+        "name": "Маршрут {service}"
+      }
+    }
+  },
+  "exceptions": {
+    "routing_option_unavailable": {
+      "message": "Выбранный маршрут больше недоступен. Обновите список и выберите доступный вариант."
+    }
+  }
+}

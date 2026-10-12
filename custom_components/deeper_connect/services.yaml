@@ -1,0 +1,35 @@
+refresh_tunnels:
+  name: Refresh tunnels and repair routes
+  description: Refresh active tunnels, wait 60 seconds, then repair unavailable application and domain routes.
+  fields:
+    entry_id:
+      name: Integration
+      required: true
+      selector:
+        config_entry:
+          integration: deeper_connect
+    repair:
+      name: Repair routes
+      default: true
+      selector:
+        boolean:
+set_domain_tunnel:
+  name: Set domain tunnel
+  description: Change the tunnel for an existing routing whitelist domain.
+  fields:
+    entry_id:
+      name: Integration
+      required: true
+      selector:
+        config_entry:
+          integration: deeper_connect
+    domain_name:
+      name: Domain
+      required: true
+      selector:
+        text:
+    tunnel_code:
+      name: Tunnel code
+      required: true
+      selector:
+        text:
