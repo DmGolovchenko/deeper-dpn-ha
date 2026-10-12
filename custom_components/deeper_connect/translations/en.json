@@ -3,38 +3,35 @@
     "step": {
       "user": {
         "title": "Deeper Connect",
-        "description": "Enter your normal AtomOS password; the integration encrypts it before login. If pasting existing ciphertext, enable \"Password is already encrypted\".",
+        "description": "Enter the API URL, username and your normal AtomOS password.",
         "data": {
           "base_url": "API base URL",
           "username": "Username",
-          "password": "Password",
-          "password_is_encrypted": "Password is already encrypted"
+          "password": "Password"
         }
       },
       "reauth_confirm": {
         "title": "Deeper Connect",
-        "description": "Enter your normal AtomOS password; the integration encrypts it before login. If pasting existing ciphertext, enable \"Password is already encrypted\".",
+        "description": "Enter the API URL, username and your normal AtomOS password.",
         "data": {
           "base_url": "API base URL",
           "username": "Username",
-          "password": "Password",
-          "password_is_encrypted": "Password is already encrypted"
+          "password": "Password"
         }
       },
       "reconfigure": {
         "title": "Deeper Connect",
-        "description": "Enter your normal AtomOS password; the integration encrypts it before login. If pasting existing ciphertext, enable \"Password is already encrypted\".",
+        "description": "Enter the API URL, username and your normal AtomOS password.",
         "data": {
           "base_url": "API base URL",
           "username": "Username",
-          "password": "Password",
-          "password_is_encrypted": "Password is already encrypted"
+          "password": "Password"
         }
       }
     },
     "error": {
       "cannot_connect": "Cannot connect or API response is incompatible.",
-      "invalid_auth": "Deeper rejected login. Check credentials and the \"Password is already encrypted\" setting.",
+      "invalid_auth": "Deeper rejected login. Check your username and password.",
       "invalid_url": "Enter an http(s) API base URL, optionally ending in /api.",
       "wrong_device": "This is a different device.",
       "already_configured": "Device is already configured.",
@@ -50,16 +47,119 @@
     "step": {
       "init": {
         "title": "Deeper Connect options",
-        "description": "Automatic refresh repairs routes every four hours. Optional read-only telemetry profile uses verified GET endpoints.",
+        "description": "Configure the integration or add a service and its route.",
+        "menu_options": {
+          "settings": "Polling and automatic repair",
+          "application": "Choose application",
+          "custom_service": "Add custom service"
+        }
+      },
+      "settings": {
+        "title": "Deeper Connect options",
+        "description": "Tunnel refresh is manual by default. Optionally enable automatic route repair and set its interval in minutes. Sensor polling only reads status.",
         "data": {
           "scan_interval": "Polling interval (seconds)",
-          "auto_refresh": "Refresh and repair every four hours",
-          "telemetry_profile": "Additional telemetry API mapping (JSON)"
+          "auto_refresh": "Automatically refresh tunnels and repair routes",
+          "refresh_interval_minutes": "Automatic repair interval (minutes)"
+        }
+      },
+      "application": {
+        "title": "Choose application",
+        "description": "Choose an application from the Deeper catalog and its route. Saving applies the route on the device and adds a routing selector to its page.",
+        "data": {
+          "application": "Application",
+          "tunnel": "Route"
+        }
+      },
+      "custom_service": {
+        "title": "Add custom service",
+        "description": "Enter a name, service domains (one per line), and a route. Saving adds or updates Deeper domain rules. Use domain names without http://, paths, or *. Custom services support direct routing or a specific tunnel.",
+        "data": {
+          "name": "Service name",
+          "domains": "Domains",
+          "tunnel": "Route"
         }
       }
     },
     "error": {
-      "invalid_profile": "Invalid telemetry JSON mapping."
+      "application_missing": "The application is no longer in the Deeper catalog.",
+      "operation_failed": "Could not apply the route. Check the tunnel and device availability. Some domain rules may have been applied; saving can be retried.",
+      "invalid_domains": "Enter 1–50 valid domain names without URLs, IP addresses, or wildcards.",
+      "invalid_name": "Enter a name between 1 and 60 characters.",
+      "name_exists": "A service with this name already exists.",
+      "domain_in_use": "A domain is already managed by another custom service."
+    },
+    "abort": {
+      "cannot_connect": "The integration is not loaded or the device is unavailable. Restore the connection first."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "count_tunnels": {
+        "name": "Active tunnels"
+      },
+      "count_domains": {
+        "name": "Whitelist domains count"
+      },
+      "installed_version": {
+        "name": "AtomOS version"
+      },
+      "latest_version": {
+        "name": "Latest AtomOS version"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "cpu_cores": {
+        "name": "CPU cores"
+      },
+      "cpu_model": {
+        "name": "CPU model"
+      },
+      "total_memory": {
+        "name": "Total memory"
+      }
+    },
+    "button": {
+      "refresh_all": {
+        "name": "Refresh and repair tunnels"
+      },
+      "reboot": {
+        "name": "Restart device"
+      }
+    },
+    "update": {
+      "firmware": {
+        "name": "AtomOS firmware"
+      }
+    },
+    "select": {
+      "routing_mode": {
+        "name": "Routing mode"
+      },
+      "app_instagram_route": {
+        "name": "Instagram route"
+      },
+      "app_youtube_route": {
+        "name": "YouTube route"
+      },
+      "app_whatsapp_route": {
+        "name": "WhatsApp route"
+      },
+      "app_telegram_route": {
+        "name": "Telegram route"
+      },
+      "app_route": {
+        "name": "{app} route"
+      },
+      "custom_service_route": {
+        "name": "{service} route"
+      }
+    }
+  },
+  "exceptions": {
+    "routing_option_unavailable": {
+      "message": "The selected route is no longer available. Refresh the list and choose an available option."
     }
   }
 }

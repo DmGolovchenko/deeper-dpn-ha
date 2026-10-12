@@ -1,46 +1,35 @@
-"""Refresh commands."""
-from homeassistant.components.button import ButtonEntity
+"""Manual refresh and device restart controls."""
+from homeassistant.components.button import ButtonDeviceClass, ButtonEntity
+from homeassistant.helpers.entity import EntityCategory
 
-from .entity import DeeperEntity, discover
+from .entity import DeeperEntity
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = entry.runtime_data
-    async_add_entities([DeeperRefreshAll(coordinator), DeeperPoll(coordinator)])
-    discover(coordinator, async_add_entities, "tunnels", DeeperTunnelRefresh)
+    async_add_entities([DeeperRefreshAll(coordinator), DeeperReboot(coordinator)])
 
 
 class DeeperRefreshAll(DeeperEntity, ButtonEntity):
-    _attr_icon = "mdi:refresh"
+    _attr_icon = "mdi:sync"
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(self, coordinator):
-        super().__init__(coordinator, "refresh_all", "Refresh tunnels and repair routes")
+        super().__init__(coordinator, "refresh_all", "Refresh and repair tunnels")
 
     async def async_press(self):
         await self.coordinator.refresh_all()
 
 
-class DeeperPoll(DeeperEntity, ButtonEntity):
-    _attr_icon = "mdi:sync"
+
+class DeeperReboot(DeeperEntity, ButtonEntity):
+    _attr_icon = "mdi:restart"
+    _attr_device_class = ButtonDeviceClass.RESTART
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(self, coordinator):
-        super().__init__(coordinator, "poll", "Read device status / check updates")
+        super().__init__(coordinator, "reboot", "Restart device")
 
     async def async_press(self):
-        self.coordinator.api.invalidate_version_check()
-        await self.coordinator.async_refresh()
+        await self.coordinator.reboot()
 
-
-class DeeperTunnelRefresh(DeeperEntity, ButtonEntity):
-    _attr_icon = "mdi:refresh"
-
-    def __init__(self, coordinator, code):
-        super().__init__(coordinator, f"tunnel_{code}_refresh", f"Refresh tunnel {code}")
-        self.code = code
-
-    @property
-    def available(self):
-        return super().available and any(t["tunnelCode"] == self.code for t in self.coordinator.data["tunnels"])
-
-    async def async_press(self):
-        await self.coordinator.refresh_one(self.code)

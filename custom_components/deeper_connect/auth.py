@@ -48,16 +48,13 @@ def encrypt_password(password, public_key=PUBLIC_KEY):
 
 
 def prepare_credentials(data):
-    """Return a copy containing only the API-ready secret; never persist plaintext.
+    """Encrypt fresh plaintext form input without changing existing saved secrets.
 
-    Legacy config entries contain an opaque encrypted password already.
-    This helper is called only for new input from configuration forms.
+    This helper is only used for configuration form submissions. Runtime login
+    sends the already encrypted secret directly, including legacy config entries.
+    An old stored mode flag must not bypass encryption of a newly entered password.
     """
     prepared = dict(data)
-    password = prepared.get("password")
-    if not isinstance(password, str) or not password:
-        raise InvalidPassword("Password must not be empty")
-    if not prepared.get("password_is_encrypted", False):
-        prepared["password"] = encrypt_password(password)
-    prepared["password_is_encrypted"] = True
+    prepared.pop("password_is_encrypted", None)
+    prepared["password"] = encrypt_password(prepared.get("password"))
     return prepared

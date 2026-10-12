@@ -33,3 +33,20 @@ def repair_plan(snapshot):
     domains = [(d["domainName"], d["tunnelCode"], choose_tunnel(tunnels)) for d in snapshot["domains"]
                if d["tunnelCode"] not in active and d["tunnelCode"] not in {UNASSIGNED, DIRECT}]
     return apps, domains
+
+
+def next_app_tunnel(tunnels, app, current):
+    """Cycle distinct active routes, ordered by the application's country priorities."""
+    ranked = list({t["tunnelCode"]: t for t in active_tunnels(tunnels)}.values())
+    preferred = APP_COUNTRIES.get(app, [])
+    if preferred:
+        ranked.sort(key=lambda t: preferred.index(t.get("countryCode"))
+                    if t.get("countryCode") in preferred else len(preferred))
+    codes = [t["tunnelCode"] for t in ranked]
+    if not codes:
+        raise ValueError("No active DPN tunnels")
+    if current not in codes:
+        return codes[0]
+    if len(codes) == 1:
+        raise ValueError("No other active DPN tunnel is available")
+    return codes[(codes.index(current) + 1) % len(codes)]

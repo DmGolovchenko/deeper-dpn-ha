@@ -1,5 +1,5 @@
 """Firmware version comparison; installing firmware is intentionally unsupported."""
-from homeassistant.components.update import UpdateEntity
+from homeassistant.components.update import UpdateDeviceClass, UpdateEntity
 from homeassistant.helpers.entity import EntityCategory
 
 from .entity import DeeperEntity
@@ -14,9 +14,16 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class DeeperFirmware(DeeperEntity, UpdateEntity):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_title = "AtomOS"
+    _attr_icon = "mdi:chip"
+    _attr_device_class = UpdateDeviceClass.FIRMWARE
 
     def __init__(self, coordinator):
         super().__init__(coordinator, "firmware", "AtomOS firmware")
+
+    @property
+    def entity_picture(self):
+        # Let the entity show its firmware chip icon instead of a generic brand image.
+        return None
 
     @property
     def installed_version(self):

@@ -12,6 +12,10 @@ class DeeperError(Exception):
     """Communication, protocol, or operation failure."""
 
 
+class DeeperCommandUncertain(DeeperError):
+    """The device disconnected after a command; do not replay it."""
+
+
 class DeeperAuthError(DeeperError):
     """Authentication rejected."""
 
@@ -127,8 +131,54 @@ class DeeperApi:
     async def set_domain(self, name, old, new):
         await self.mutate("/smartRoute/editWhiteEntry/domain", {"domainName": name, "fromTunnelCode": old, "toTunnelCode": new})
 
+    async def add_domain(self, name, target):
+        await self.mutate("/smartRoute/addToWhitelist/domain", {"domainName": name, "tunnelCode": target})
+
     async def refresh_tunnel(self, code):
         await self.mutate("/smartRoute/refreshTunnel", {"tunnelCode": code})
+
+    async def routing(self):
+        result = await self.info("/smartRoute/getDpnMode")
+        if result.get("dpnMode") not in {"disabled", "smart", "full"}:
+            raise DeeperError("Unexpected routing mode response")
+        return result
+
+    async def set_routing(self, mode, code):
+        if mode not in {"disabled", "smart", "full"} or not isinstance(code, str) or not code:
+            raise DeeperError("Invalid routing parameters")
+        await self.mutate("/smartRoute/setDpnMode", {"dpnMode": mode, "tunnelCode": code})
+
+    async def reboot(self):
+        """Send once; an empty successful response is valid for this endpoint."""
+        async with self._lock:
+            if not self._authenticated:
+                await self._login()
+            try:
+                async with self._get_session().post(
+                    self.base_url + "/admin/reboot", allow_redirects=False,
+                ) as response:
+                    if response.status in (401, 403):
+                        self._authenticated = False
+                        raise DeeperAuthError("Reboot authentication rejected")
+                    if response.status >= 300:
+                        raise DeeperError(f"AtomOS HTTP {response.status}")
+                    body = await response.read()
+                    if body:
+                        import json
+                        try:
+                            result = json.loads(body)
+                        except ValueError:
+                            result = None
+                        if isinstance(result, dict) and result.get("success") is False:
+                            raise DeeperError("AtomOS rejected reboot")
+            except (aiohttp.ServerDisconnectedError, aiohttp.ClientPayloadError, asyncio.TimeoutError) as err:
+                raise DeeperCommandUncertain(
+                    "Device disconnected after reboot request; the result is unconfirmed. Check device status before retrying."
+                ) from err
+            except aiohttp.ClientError as err:
+                raise DeeperError("Could not send reboot request") from err
+            finally:
+                self._authenticated = False
 
     async def hardware(self):
         result = await self.request("GET", "/system-info/hardware-info")
